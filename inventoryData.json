@@ -1,0 +1,33 @@
+{
+  "container:": [
+    {
+      "name": "MS",
+      "parent": ""
+    },
+    {
+      "name": "RH",
+      "parent": ""
+    },
+    {
+      "name": "LagerMS",
+      "parent": "MS"
+    },
+    {
+      "name": "13",
+      "parent": "LagerMS"
+    }
+  ],
+  "items": [
+    {
+      "id": "1",
+      "name": "Nexxos 240mm Radiator",
+      "image": "DC00001.jpg",
+      "container": "13",
+      "tags": [
+        "watercooling",
+        "pc"
+      ]
+    }
+  ]
+}
+ 
