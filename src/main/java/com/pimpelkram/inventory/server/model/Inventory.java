@@ -2,6 +2,7 @@ package com.pimpelkram.inventory.server.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Inventory {
@@ -28,6 +29,11 @@ public class Inventory {
     }
 
     // other methods:
+
+
+    //------------------------Container Methods:-------------------------------
+
+
     /** Fügt einen Container zur Liste der bekannten Container hinzu.
      * Der Name muss eindeutig sein!
      * @param name Name des Containers (z.B. MS oder RH oder LagerraumMS oder Box25)
@@ -35,24 +41,21 @@ public class Inventory {
      * @return true= Hinzufügen war erfolgreich, false=Fehler, wurde nicht hinzugefügt (z.B. Name nicht eindeutig/schon vorhanden)
      * @since 12.03.2019
      * @author borsutzha */
-    public boolean addContainer(String name, String parent) {
+    public UUID addContainer(String name, UUID parent) {
+        Container newContainer = new Container(name);
         if (this.containers == null) {
             this.containers = new ArrayList<>();
         }
         // name darf nicht null sein!
         if (name == null) {
-            return false;
+            return null;
         }
-        // name muss eindeutig sein!
-        if (this.containers.stream().anyMatch(container -> container.getName().equals(name))) {
-            return false;
+        if (parent == null) {
+            this.containers.add(newContainer);
+        } else {
+            this.containers.forEach(container -> container.add(newContainer, parent));
         }
-        // parent muss existieren falls nicht null
-        if (parent != null && !this.containers.stream().anyMatch(container -> parent.equals(container.getName()))) {
-            return false;
-        }
-        this.containers.add(new Container(name, parent));
-        return true;
+        return newContainer.getUuid();
     }
 
     public Container getContainer(String name) {
@@ -65,7 +68,16 @@ public class Inventory {
 
     public void deleteContainer(String name) {
         this.containers.removeIf(container -> container.getName().equals(name));
+        //todo: set parent null where parent = {name}
     }
+
+    public void getAllSubContainers(String name) {
+        //return tree list of some kind?
+    }
+
+
+
+    //----------------------------Item Methods-----------------------------
 
     public boolean addItem(String name, List<String> tags, String imagePath, String containerName, String description) {
         if (this.items == null) {
