@@ -71,32 +71,23 @@ public class Inventory {
         return all.filter(c -> c.getUuid().equals(id)).findFirst();
     }
 
-    public void deleteContainer(String name) {
-        this.containers.removeIf(container -> container.getName().equals(name));
-        //todo: set parent null where parent = {name}
-    }
-
-    public void getAllSubContainers(String name) {
-        //return tree list of some kind?
-    }
-
-
 
     //----------------------------Item Methods-----------------------------
 
-    public boolean addItem(String name, List<String> tags, String imagePath, String containerName, String description) {
+    public boolean addItem(String name, List<String> tags, String imagePath, UUID containerID, String description) {
         if (this.items == null) {
             this.items = new ArrayList<>();
         }
-        if (name == null || this.items.stream().anyMatch(item -> item.getName().equals(name))) {
-            return false;
-        }
-        this.items.add(new Item(name, tags, imagePath, containerName, description));
+        this.items.add(new Item(name, tags, imagePath, containerID, description));
         return true;
     }
 
-    public void deleteItem(String name) {
-        this.items.removeIf(item -> item.getName() == name);
+    public boolean deleteItem(UUID itemId) {
+       return this.items.removeIf(item -> item.getId().equals(itemId));
+    }
+
+    public List<Item> getItemsOfContainer(UUID containerID) {
+        return this.items.stream().filter(item -> item.getContainerID().equals(containerID)).collect(Collectors.toList());
     }
 
 }

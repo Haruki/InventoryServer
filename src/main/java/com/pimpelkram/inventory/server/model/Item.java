@@ -1,23 +1,35 @@
 package com.pimpelkram.inventory.server.model;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Item {
+
+    private UUID id;
 
     private String       name;
     private List<String> tagList;
     private String       imagePath;
     private String       description;
-    private String       container;
+    private UUID       containerID;
 
     // getter setter
 
-    public String getContainer() {
-        return this.container;
+
+    public UUID getId() {
+        return id;
     }
 
-    public void setContainer(String container) {
-        this.container = container;
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public UUID getContainerID() {
+        return this.containerID;
+    }
+
+    public void setContainerID(UUID containerID) {
+        this.containerID = containerID;
     }
 
     public String getName() {
@@ -53,12 +65,13 @@ public class Item {
     }
 
     // constructor
-    public Item(String name, List<String> tags, String imagePath, String containerName, String description) {
+    public Item(String name, List<String> tags, String imagePath, UUID containerID, String description) {
         this.name = name;
         this.tagList = tags;
         this.imagePath = imagePath;
-        this.container = containerName;
+        this.containerID = containerID;
         this.description = description;
+        this.id = UUID.randomUUID();
     }
 
 }
