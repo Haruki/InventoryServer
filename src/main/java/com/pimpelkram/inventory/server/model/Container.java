@@ -1,13 +1,12 @@
 package com.pimpelkram.inventory.server.model;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class Container {
 
     private String name;
-    private Map<String, Container> subContainers = new HashMap<>();
+    private List<Container> subContainers = new ArrayList<>();
     private UUID uuid;
 
     public Container(String name) {
@@ -34,11 +33,11 @@ public class Container {
         this.name = name;
     }
 
-    public Map<String, Container> getSubContainers() {
+    public List<Container> getSubContainers() {
         return subContainers;
     }
 
-    public void setSubContainers(Map<String, Container> subContainers) {
+    public void setSubContainers(List<Container> subContainers) {
         this.subContainers = subContainers;
     }
 
@@ -46,10 +45,19 @@ public class Container {
 
     public boolean addContainer(Container container, UUID parent) {
         if (this.getUuid().equals(parent)) {
-            this.subContainers.put(container.getName(),container);
+            this.subContainers.add(container);
+            return true;
         } else {
-            //test if one returns true;???
+            return this.subContainers.stream().anyMatch(con -> con.addContainer(container, parent));
         }
-        return false;
+    }
+
+    public Stream<Container> getAll() {
+        Stream<Container> result = Stream.of(this);
+        for (Container c : this.subContainers){
+           result = Stream.concat(result, c.getAll());
+
+        }
+        return result;
     }
 }

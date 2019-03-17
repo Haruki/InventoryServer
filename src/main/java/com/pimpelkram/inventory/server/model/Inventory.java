@@ -2,8 +2,10 @@ package com.pimpelkram.inventory.server.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Inventory {
 
@@ -53,17 +55,20 @@ public class Inventory {
         if (parent == null) {
             this.containers.add(newContainer);
         } else {
-            this.containers.forEach(container -> container.add(newContainer, parent));
+            boolean isSuccessfullAdded = this.containers.stream().anyMatch(container -> container.addContainer(newContainer, parent));
+            if (!isSuccessfullAdded) {
+                return null;
+            }
         }
         return newContainer.getUuid();
     }
 
-    public Container getContainer(String name) {
-        final List<Container> sublist = this.containers.stream().filter(container -> container.getName().equals(name)).collect(Collectors.toList());
-        if (sublist != null && sublist.size() > 0) {
-            return sublist.get(0);
+    public Optional<Container> getContainer(UUID id) {
+        Stream<Container> all = Stream.empty();
+        for (Container c : this.containers) {
+            all = Stream.concat(all, c.getAll());
         }
-        return null;
+        return all.filter(c -> c.getUuid().equals(id)).findFirst();
     }
 
     public void deleteContainer(String name) {
