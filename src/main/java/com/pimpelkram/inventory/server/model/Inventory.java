@@ -32,9 +32,7 @@ public class Inventory {
 
     // other methods:
 
-
-    //------------------------Container Methods:-------------------------------
-
+    // ------------------------Container Methods:-------------------------------
 
     /** Fügt einen Container zur Liste der bekannten Container hinzu.
      * Der Name muss eindeutig sein!
@@ -44,7 +42,7 @@ public class Inventory {
      * @since 12.03.2019
      * @author borsutzha */
     public UUID addContainer(String name, UUID parent) {
-        Container newContainer = new Container(name);
+        final Container newContainer = new Container(name);
         if (this.containers == null) {
             this.containers = new ArrayList<>();
         }
@@ -55,7 +53,7 @@ public class Inventory {
         if (parent == null) {
             this.containers.add(newContainer);
         } else {
-            boolean isSuccessfullAdded = this.containers.stream().anyMatch(container -> container.addContainer(newContainer, parent));
+            final boolean isSuccessfullAdded = this.containers.stream().anyMatch(container -> container.addContainer(newContainer, parent));
             if (!isSuccessfullAdded) {
                 return null;
             }
@@ -65,29 +63,37 @@ public class Inventory {
 
     public Optional<Container> getContainer(UUID id) {
         Stream<Container> all = Stream.empty();
-        for (Container c : this.containers) {
+        for (final Container c : this.containers) {
             all = Stream.concat(all, c.getAll());
         }
         return all.filter(c -> c.getUuid().equals(id)).findFirst();
     }
 
+    // ----------------------------Item Methods-----------------------------
 
-    //----------------------------Item Methods-----------------------------
+    public boolean existsItem(UUID id) {
+        return this.items.stream().anyMatch(item -> item.getId().equals(id));
+    }
 
-    public boolean addItem(String name, List<String> tags, String imagePath, UUID containerID, String description) {
+    public UUID addItem(String name, List<String> tags, String imagePath, UUID containerID, String description) {
         if (this.items == null) {
             this.items = new ArrayList<>();
         }
-        this.items.add(new Item(name, tags, imagePath, containerID, description));
-        return true;
+        final Item newItem = new Item(name, tags, imagePath, containerID, description);
+        this.items.add(newItem);
+        return newItem.getId();
     }
 
     public boolean deleteItem(UUID itemId) {
-       return this.items.removeIf(item -> item.getId().equals(itemId));
+        return this.items.removeIf(item -> item.getId().equals(itemId));
     }
 
     public List<Item> getItemsOfContainer(UUID containerID) {
         return this.items.stream().filter(item -> item.getContainerID().equals(containerID)).collect(Collectors.toList());
+    }
+
+    public Optional<Item> getItem(UUID itemId) {
+        return this.getItems().stream().filter(item -> item.getId().equals(itemId)).findFirst();
     }
 
 }
