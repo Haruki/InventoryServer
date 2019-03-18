@@ -64,7 +64,7 @@ public class Inventory {
     public Optional<Container> getContainer(UUID id) {
         Stream<Container> all = Stream.empty();
         for (final Container c : this.containers) {
-            all = Stream.concat(all, c.getAll());
+            all = Stream.concat(all, c.all());
         }
         return all.filter(c -> c.getUuid().equals(id)).findFirst();
     }

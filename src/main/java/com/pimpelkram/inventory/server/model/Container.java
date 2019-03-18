@@ -1,24 +1,25 @@
 package com.pimpelkram.inventory.server.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public class Container {
 
-    private String name;
+    private String          name;
     private List<Container> subContainers = new ArrayList<>();
-    private UUID uuid;
+    private UUID            uuid;
 
     public Container(String name) {
         this.name = name;
         this.uuid = UUID.randomUUID();
     }
 
-    //----------------standard getter setter:-------------------
-
+    // ----------------standard getter setter:-------------------
 
     public UUID getUuid() {
-        return uuid;
+        return this.uuid;
     }
 
     public void setUuid(UUID uuid) {
@@ -26,7 +27,7 @@ public class Container {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -34,14 +35,14 @@ public class Container {
     }
 
     public List<Container> getSubContainers() {
-        return subContainers;
+        return this.subContainers;
     }
 
     public void setSubContainers(List<Container> subContainers) {
         this.subContainers = subContainers;
     }
 
-    //--------------------container handling---------------------
+    // --------------------container handling---------------------
 
     public boolean addContainer(Container container, UUID parent) {
         if (this.getUuid().equals(parent)) {
@@ -52,10 +53,10 @@ public class Container {
         }
     }
 
-    public Stream<Container> getAll() {
+    public Stream<Container> all() {
         Stream<Container> result = Stream.of(this);
-        for (Container c : this.subContainers){
-           result = Stream.concat(result, c.getAll());
+        for (final Container c : this.subContainers) {
+            result = Stream.concat(result, c.all());
 
         }
         return result;
