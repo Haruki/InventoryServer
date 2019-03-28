@@ -22,7 +22,7 @@ public class SettingsFileLoader {
 
     private final String homePath         = System.getProperty("user.home");
 
-    private final String expectedFileName = "inventoryServer.json";
+    private final String expectedFileName = ".inventoryConfig.json";
 
     private final Path   settingsPath     = Paths.get(this.homePath + "\\" + this.expectedFileName);
 
