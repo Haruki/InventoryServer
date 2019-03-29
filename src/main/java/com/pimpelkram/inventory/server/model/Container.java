@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Container {
 
     private String          name;
@@ -14,6 +17,18 @@ public class Container {
     public Container(String name) {
         this.name = name;
         this.uuid = UUID.randomUUID();
+    }
+
+    public Container(String name, UUID id) {
+        this.name = name;
+        this.uuid = id;
+    }
+
+    @JsonCreator
+    public Container(@JsonProperty("name") String name, @JsonProperty("id") UUID id, @JsonProperty("subContainers") List<Container> subContainers) {
+        this.name = name;
+        this.uuid = id;
+        this.subContainers = subContainers;
     }
 
     // ----------------standard getter setter:-------------------

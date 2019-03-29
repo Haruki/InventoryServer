@@ -3,21 +3,23 @@ package com.pimpelkram.inventory.server.model;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Item {
 
-    private UUID id;
+    private UUID         id;
 
     private String       name;
     private List<String> tagList;
     private String       imagePath;
     private String       description;
-    private UUID       containerID;
+    private UUID         containerID;
 
     // getter setter
 
-
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(UUID id) {
@@ -65,7 +67,9 @@ public class Item {
     }
 
     // constructor
-    public Item(String name, List<String> tags, String imagePath, UUID containerID, String description) {
+    @JsonCreator
+    public Item(@JsonProperty("name") String name, @JsonProperty("tags") List<String> tags, @JsonProperty("imagePath") String imagePath,
+            @JsonProperty("containerID") UUID containerID, @JsonProperty("description") String description) {
         this.name = name;
         this.tagList = tags;
         this.imagePath = imagePath;

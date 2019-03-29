@@ -9,7 +9,9 @@ import java.util.stream.Stream;
 
 public class Inventory {
 
+    // @JsonDeserialize(as = ArrayList.class, contentAs = Container.class)
     private List<Container> containers;
+    // @JsonDeserialize(as = ArrayList.class, contentAs = Item.class)
     private List<Item>      items;
 
     // getters setters:
