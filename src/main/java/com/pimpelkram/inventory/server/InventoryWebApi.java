@@ -1,6 +1,7 @@
 
 package com.pimpelkram.inventory.server;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -76,6 +77,26 @@ public class InventoryWebApi {
             return this.mapper.writeValueAsString(allItems);
         } catch (final JsonProcessingException e) {
             // TODO Auto-generated catch block
+            e.printStackTrace();
+            return "ERROR";
+        }
+    }
+
+    String addItem(Request request, Response response) {
+        final String requestString = request.body();
+        Item item;
+        try {
+            item = this.mapper.readValue(requestString, Item.class);
+            final UUID newID = this.inventory.addItem(item.getName(), item.getTagList(), item.getImagePath(), item.getContainerID(),
+                    item.getDescription());
+            final Optional<Item> newItem = this.inventory.getItem(newID);
+            if (newItem.isPresent()) {
+                return this.mapper.writeValueAsString(newItem);
+            } else {
+                response.status(404);
+                return "Fehler bei der Erstellung eines neuen Items";
+            }
+        } catch (final IOException e) {
             e.printStackTrace();
             return "ERROR";
         }
