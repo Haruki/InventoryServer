@@ -2,6 +2,7 @@
 package com.pimpelkram.inventory.server;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,27 +38,36 @@ public class InventoryWebApi {
     }
 
     String getContainer(Request request, Response response) {
-        try {
-            final Container item = this.inventory.getContainer(UUID.fromString(request.params(":id"))).get();
-            return this.mapper.writeValueAsString(item);
-        } catch (final JsonProcessingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return "ERROR";
+        final Optional<Container> item = this.inventory.getContainer(UUID.fromString(request.params(":id")));
+        if (item.isPresent()) {
+            try {
+                return this.mapper.writeValueAsString(item.get());
+            } catch (final JsonProcessingException e) {
+                e.printStackTrace();
+                return "ERROR";
+            }
+        } else {
+            response.status(404);
+            return null;
         }
     }
 
     // -------------------- ITEMS------------------------
 
     String getItem(Request request, Response response) {
-        final Item item = this.inventory.getItem(UUID.fromString(request.params(":id"))).get();
-        try {
-            return this.mapper.writeValueAsString(item);
-        } catch (final JsonProcessingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return "ERROR";
+        final Optional<Item> item = this.inventory.getItem(UUID.fromString(request.params(":id")));
+        if (item.isPresent()) {
+            try {
+                return this.mapper.writeValueAsString(item.get());
+            } catch (final JsonProcessingException e) {
+                e.printStackTrace();
+                return "ERROR";
+            }
+        } else {
+            response.status(404);
+            return null;
         }
+
     }
 
     String getItems(Request request, Response response) {
