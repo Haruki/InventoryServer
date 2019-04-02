@@ -31,6 +31,10 @@ public class Main {
                 get("/", api::getItems);
                 get("/:id", api::getItem);
             });
+            path("/containers", () -> {
+                get("/", api::getContainers);
+                get("/:id", api::getContainer);
+            });
         } catch (final IOException e) {
 
             e.printStackTrace();
