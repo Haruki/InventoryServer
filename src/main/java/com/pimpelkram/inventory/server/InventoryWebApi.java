@@ -99,7 +99,6 @@ public class InventoryWebApi {
         } catch (final IOException e) {
             e.printStackTrace();
             return "ERROR";
-
         }
     }
 }
