@@ -2,6 +2,7 @@ package com.pimpelkram.inventory.server;
 
 import static spark.Spark.get;
 import static spark.Spark.path;
+import static spark.Spark.post;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +31,7 @@ public class Main {
             path("/items", () -> {
                 get("/", api::getItems);
                 get("/:id", api::getItem);
+                post("/", api::addItem);
             });
             path("/containers", () -> {
                 get("/", api::getContainers);
