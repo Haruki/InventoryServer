@@ -3,6 +3,7 @@ package com.pimpelkram.inventory.server;
 import static spark.Spark.get;
 import static spark.Spark.path;
 import static spark.Spark.post;
+import static spark.Spark.staticFiles;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class Main {
             final Inventory inventory = mapper.readValue(new File(settings.getServerFolder() + "inventory.json"), Inventory.class);
             final InventoryWebApi api = new InventoryWebApi(inventory, mapper);
             logger.debug("Anzahl items: " + inventory.getItems().size());
+            staticFiles.externalLocation(settings.getServerFolder());
             path("/items", () -> {
                 get("/", api::getItems);
                 get("/:id", api::getItem);
