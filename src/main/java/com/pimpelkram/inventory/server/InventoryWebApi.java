@@ -91,7 +91,7 @@ public class InventoryWebApi {
                     item.getDescription());
             final Optional<Item> newItem = this.inventory.getItem(newID);
             if (newItem.isPresent()) {
-                return this.mapper.writeValueAsString(newItem);
+                return this.mapper.writeValueAsString(newItem.get());
             } else {
                 response.status(404);
                 return "Fehler bei der Erstellung eines neuen Items";
