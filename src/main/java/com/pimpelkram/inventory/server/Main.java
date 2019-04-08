@@ -30,6 +30,7 @@ public class Main {
             final InventoryWebApi api = new InventoryWebApi(inventory, mapper);
             logger.debug("Anzahl items: " + inventory.getItems().size());
             staticFiles.externalLocation(settings.getServerFolder());
+            final ImageUpload imageUpload = new ImageUpload(settings.getServerFolder());
             path("/items", () -> {
                 get("/", api::getItems);
                 get("/:id", api::getItem);
@@ -39,6 +40,7 @@ public class Main {
                 get("/", api::getContainers);
                 get("/:id", api::getContainer);
             });
+            post("/imageUpload", imageUpload::post);
         } catch (final IOException e) {
 
             e.printStackTrace();
