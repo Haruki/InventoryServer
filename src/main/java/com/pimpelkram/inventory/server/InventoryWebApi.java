@@ -32,7 +32,6 @@ public class InventoryWebApi {
         try {
             return this.mapper.writeValueAsString(allContainers);
         } catch (final JsonProcessingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return "ERROR";
         }
@@ -50,6 +49,23 @@ public class InventoryWebApi {
         } else {
             response.status(404);
             return null;
+        }
+    }
+
+    String addContainer(Request request, Response response) {
+        final String requestString = request.body();
+        try {
+            final Container container = this.mapper.readValue(requestString, Container.class);
+            final UUID newContainerUUID = this.inventory.addContainer(container.getName(), container.getParentUuid());
+            final Optional<Container> newContainer = this.inventory.getContainer(newContainerUUID);
+            if (newContainer.isPresent()) {
+                return this.mapper.writeValueAsString(newContainer.get());
+            } else {
+                return "Fehler bei der Erstellung eines neuen Containers";
+            }
+        } catch (final IOException e) {
+            e.printStackTrace();
+            return "ERROR";
         }
     }
 
@@ -76,7 +92,6 @@ public class InventoryWebApi {
         try {
             return this.mapper.writeValueAsString(allItems);
         } catch (final JsonProcessingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return "ERROR";
         }

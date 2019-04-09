@@ -13,6 +13,7 @@ public class Container {
     private String          name;
     private List<Container> subContainers = new ArrayList<>();
     private UUID            uuid;
+    private UUID            parentUuid;
 
     public Container(String name) {
         this.name = name;
@@ -55,6 +56,14 @@ public class Container {
 
     public void setSubContainers(List<Container> subContainers) {
         this.subContainers = subContainers;
+    }
+
+    public UUID getParentUuid() {
+        return this.parentUuid;
+    }
+
+    public void setParentUuid(UUID parentUuid) {
+        this.parentUuid = parentUuid;
     }
 
     // --------------------container handling---------------------
