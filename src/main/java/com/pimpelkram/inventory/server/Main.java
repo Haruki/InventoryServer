@@ -31,6 +31,7 @@ public class Main {
             logger.debug("Anzahl items: " + inventory.getItems().size());
             staticFiles.externalLocation(settings.getServerFolder());
             final ImageUpload imageUpload = new ImageUpload(settings.getServerFolder());
+            final PersistenceHandler persistence = new PersistenceHandler(mapper, inventory, settings.getServerFolder());
             path("/items", () -> {
                 get("/", api::getItems);
                 get("/:id", api::getItem);
@@ -41,6 +42,7 @@ public class Main {
                 get("/:id", api::getContainer);
             });
             post("/imageUpload", imageUpload::post);
+            get("/save", persistence::save);
         } catch (final IOException e) {
 
             e.printStackTrace();
