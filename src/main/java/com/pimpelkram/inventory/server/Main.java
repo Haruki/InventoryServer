@@ -5,9 +5,6 @@ import static spark.Spark.path;
 import static spark.Spark.post;
 import static spark.Spark.staticFiles;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,28 +22,23 @@ public class Main {
     static ObjectMapper mapper   = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
     public static void main(String[] args) {
-        try {
-            final Inventory inventory = mapper.readValue(new File(settings.getServerFolder() + "inventory.json"), Inventory.class);
-            final InventoryWebApi api = new InventoryWebApi(inventory, mapper);
-            logger.debug("Anzahl items: " + inventory.getItems().size());
-            staticFiles.externalLocation(settings.getServerFolder());
-            final ImageUpload imageUpload = new ImageUpload(settings.getServerFolder());
-            final PersistenceHandler persistence = new PersistenceHandler(mapper, inventory, settings.getServerFolder());
-            path("/items", () -> {
-                get("/", api::getItems);
-                get("/:id", api::getItem);
-                post("/", api::addItem);
-            });
-            path("/containers", () -> {
-                get("/", api::getContainers);
-                get("/:id", api::getContainer);
-            });
-            post("/imageUpload", imageUpload::post);
-            get("/save", persistence::save);
-        } catch (final IOException e) {
-
-            e.printStackTrace();
-        }
+        final PersistenceHandler persistence = new PersistenceHandler(mapper, settings.getServerFolder());
+        final Inventory inventory = persistence.loadInventory();
+        final InventoryWebApi api = new InventoryWebApi(inventory, mapper);
+        logger.debug("Anzahl items: " + inventory.getItems().size());
+        staticFiles.externalLocation(settings.getServerFolder());
+        final ImageUpload imageUpload = new ImageUpload(settings.getServerFolder());
+        path("/items", () -> {
+            get("/", api::getItems);
+            get("/:id", api::getItem);
+            post("/", api::addItem);
+        });
+        path("/containers", () -> {
+            get("/", api::getContainers);
+            get("/:id", api::getContainer);
+        });
+        post("/imageUpload", imageUpload::post);
+        get("/save", persistence::save);
 
     }
 }

@@ -22,24 +22,28 @@ public class PersistenceHandler {
 
     private final ObjectMapper mapper;
     private final String       inventoryPathString;
-    private final Inventory    inv;
+    private Inventory          inv;
     private Path               newestInventoryPath;
     Logger                     logger = LoggerFactory.getLogger(PersistenceHandler.class);
 
-    public PersistenceHandler(ObjectMapper mapper, Inventory inv, String inventoryPathParam) {
+    public PersistenceHandler(ObjectMapper mapper, String inventoryPathParam) {
         this.mapper = mapper;
-        this.inv = inv;
         this.inventoryPathString = inventoryPathParam;
         final Path inventoryPath = Paths.get(inventoryPathParam);
         Optional<Path> first = null;
         try {
-            first = Files.list(inventoryPath).filter(p -> p.startsWith("inventory"))
-                    .sorted((p1, p2) -> p1.toString().compareTo(p2.toString())).reduce((one, two) -> two);
+            // Find the newest inventory file:
+            first = Files.list(inventoryPath)
+                    .filter(p -> p.getFileName().toString().startsWith("inventory"))
+                    .sorted((p1, p2) -> p1.toString().compareTo(p2.toString()))
+                    .reduce((one, two) -> two);
         } catch (final IOException e) {
             e.printStackTrace();
         }
         if (first.isPresent()) {
             this.newestInventoryPath = first.get();
+        } else {
+            this.logger.error("Cannot load inventory file");
         }
     }
 
@@ -65,5 +69,20 @@ public class PersistenceHandler {
         } else {
             return "Saving allowed from localhost only!";
         }
+    }
+
+    /** Loads the latest saved inventory by newest name from filesystem.
+     * @return @see(Inventory.class)
+     * @since 15.04.2019
+     * @author borsutzha */
+    public Inventory loadInventory() {
+        try {
+            this.logger.info("loading inventory file: " + this.getNewestInventory());
+            this.inv = this.mapper.readValue(new File(this.getNewestInventory()), Inventory.class);
+            return this.inv;
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
