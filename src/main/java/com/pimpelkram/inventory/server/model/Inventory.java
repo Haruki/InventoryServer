@@ -13,6 +13,7 @@ public class Inventory {
     private List<Container> containers;
     // @JsonDeserialize(as = ArrayList.class, contentAs = Item.class)
     private List<Item>      items;
+    private boolean         dirty;
 
     // getters setters:
 
@@ -20,8 +21,17 @@ public class Inventory {
         return this.containers;
     }
 
+    public boolean isDirty() {
+        return this.dirty;
+    }
+
+    public void setDirty(boolean dirty) {
+        this.dirty = dirty;
+    }
+
     public void setContainers(List<Container> containers) {
         this.containers = containers;
+        this.dirty = true;
     }
 
     public List<Item> getItems() {
@@ -30,6 +40,7 @@ public class Inventory {
 
     public void setItems(List<Item> items) {
         this.items = items;
+        this.dirty = true;
     }
 
     // other methods:
@@ -60,6 +71,7 @@ public class Inventory {
                 return null;
             }
         }
+        this.dirty = true;
         return newContainer.getUuid();
     }
 
@@ -83,10 +95,12 @@ public class Inventory {
         }
         final Item newItem = new Item(name, tags, imagePath, containerID, description);
         this.items.add(newItem);
+        this.dirty = true;
         return newItem.getId();
     }
 
     public boolean deleteItem(UUID itemId) {
+        this.dirty = true;
         return this.items.removeIf(item -> item.getId().equals(itemId));
     }
 

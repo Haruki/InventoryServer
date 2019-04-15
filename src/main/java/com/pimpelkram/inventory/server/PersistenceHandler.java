@@ -54,20 +54,27 @@ public class PersistenceHandler {
     public String save(Request req, Response resp) {
         // allow save operation from localhost only
         this.logger.info("Client IP: " + req.ip());
-        if (req.ip().equals("127.0.0.1") || req.ip().equals("0:0:0:0:0:0:0:1")) {
-            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SSS");
-            final LocalDateTime now = LocalDateTime.now();
-            final String newFileName = this.inventoryPathString + "inventory_" + now.format(formatter) + ".json";
-            final File f = new File(newFileName);
-            try {
-                this.mapper.writeValue(f, this.inv);
-            } catch (final IOException e) {
-                e.printStackTrace();
+        if (this.inv.isDirty()) {
+            if (req.ip().equals("127.0.0.1") || req.ip().equals("0:0:0:0:0:0:0:1")) {
+                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss_SSS");
+                final LocalDateTime now = LocalDateTime.now();
+                final String newFileName = this.inventoryPathString + "inventory_" + now.format(formatter) + ".json";
+                final File f = new File(newFileName);
+                try {
+                    this.mapper.writeValue(f, this.inv);
+                    // successfull save to filesystem resets dirty flag to false
+                    this.inv.setDirty(false);
+                } catch (final IOException e) {
+                    e.printStackTrace();
+                }
+                this.newestInventoryPath = f.toPath();
+                return "OK. Saved as " + this.getNewestInventory();
+            } else {
+                return "Saving allowed from localhost only!";
             }
-            this.newestInventoryPath = f.toPath();
-            return "OK. Saved as " + this.getNewestInventory();
         } else {
-            return "Saving allowed from localhost only!";
+            return "Not saved. No Changes to inventory since last save operation.";
+
         }
     }
 
@@ -79,6 +86,8 @@ public class PersistenceHandler {
         try {
             this.logger.info("loading inventory file: " + this.getNewestInventory());
             this.inv = this.mapper.readValue(new File(this.getNewestInventory()), Inventory.class);
+            // just loaded inventory data is never dirty ;)
+            this.inv.setDirty(false);
             return this.inv;
         } catch (final IOException e) {
             e.printStackTrace();
