@@ -57,7 +57,7 @@ public class ImageUpload {
                     e.printStackTrace();
                 }
             }
-            return "/images/" + givenFileName;
+            return givenFileName;
         }
     }
 }
