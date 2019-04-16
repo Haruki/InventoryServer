@@ -12,7 +12,7 @@ public class Item {
 
     private String       name;
     private List<String> tagList;
-    private String       imagePath;
+    private List<String> imagePathList;
     private String       description;
     private UUID         containerID;
 
@@ -50,12 +50,12 @@ public class Item {
         this.tagList = tagList;
     }
 
-    public String getImagePath() {
-        return this.imagePath;
+    public List<String> getImagePath() {
+        return this.imagePathList;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setImagePath(List<String> imagePathList) {
+        this.imagePathList = imagePathList;
     }
 
     public String getDescription() {
@@ -68,11 +68,11 @@ public class Item {
 
     // constructor
     @JsonCreator
-    public Item(@JsonProperty("name") String name, @JsonProperty("tags") List<String> tags, @JsonProperty("imagePath") String imagePath,
+    public Item(@JsonProperty("name") String name, @JsonProperty("tags") List<String> tags, @JsonProperty("imagePath") List<String> imagePathList,
             @JsonProperty("containerID") UUID containerID, @JsonProperty("description") String description) {
         this.name = name;
         this.tagList = tags;
-        this.imagePath = imagePath;
+        this.imagePathList = imagePathList;
         this.containerID = containerID;
         this.description = description;
         this.id = UUID.randomUUID();

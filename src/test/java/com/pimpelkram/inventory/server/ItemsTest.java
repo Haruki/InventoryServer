@@ -34,7 +34,9 @@ public class ItemsTest {
     void addItemTest() {
         final List<String> tags = new ArrayList<>();
         tags.add("watercooling");
-        final UUID nexxosID = this.inv.addItem("Nexxos 240mm", tags, "000001.jpg", this.box1Id, "Alphacool Radiator");
+        final List<String> imagePathList = new ArrayList<>();
+        imagePathList.add("000001.jpg");
+        final UUID nexxosID = this.inv.addItem("Nexxos 240mm", tags, imagePathList, this.box1Id, "Alphacool Radiator");
         final Optional<Item> result = this.inv.getItem(nexxosID);
         assertTrue(result.isPresent());
         assertEquals("Nexxos 240mm", result.get().getName());

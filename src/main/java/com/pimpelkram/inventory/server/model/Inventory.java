@@ -85,15 +85,19 @@ public class Inventory {
 
     // ----------------------------Item Methods-----------------------------
 
+    public boolean updateImages(UUID id, List<String> imageList) {
+        return false;
+    }
+
     public boolean existsItem(UUID id) {
         return this.items.stream().anyMatch(item -> item.getId().equals(id));
     }
 
-    public UUID addItem(String name, List<String> tags, String imagePath, UUID containerID, String description) {
+    public UUID addItem(String name, List<String> tags, List<String> imagePathList, UUID containerID, String description) {
         if (this.items == null) {
             this.items = new ArrayList<>();
         }
-        final Item newItem = new Item(name, tags, imagePath, containerID, description);
+        final Item newItem = new Item(name, tags, imagePathList, containerID, description);
         this.items.add(newItem);
         this.dirty = true;
         return newItem.getId();
