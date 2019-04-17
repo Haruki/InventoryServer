@@ -3,6 +3,7 @@ package com.pimpelkram.inventory.server;
 import static spark.Spark.get;
 import static spark.Spark.path;
 import static spark.Spark.post;
+import static spark.Spark.put;
 import static spark.Spark.staticFiles;
 
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ public class Main {
             get("/", api::getItems);
             get("/:id", api::getItem);
             post("/", api::addItem);
+            put("/", api::updateItem);
         });
         path("/containers", () -> {
             get("/", api::getContainers);

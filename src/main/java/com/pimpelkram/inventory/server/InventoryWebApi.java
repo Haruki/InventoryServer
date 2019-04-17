@@ -71,6 +71,37 @@ public class InventoryWebApi {
 
     // -------------------- ITEMS------------------------
 
+    String updateItem(Request req, Response resp) {
+        final String requestString = req.body();
+        try {
+            final Item updateItem = this.mapper.readValue(requestString, Item.class);
+            if (updateItem == null) {
+                return "invalid request data";
+            }
+            final Optional<Item> item = this.inventory.getItem(updateItem.getId());
+            if (item.isPresent()) {
+                if (updateItem.getContainerID() != null && !updateItem.getContainerID().equals(item.get().getContainerID())) {
+                    item.get().setContainerID(updateItem.getContainerID());
+                }
+                if (updateItem.getDescription() != null && !updateItem.getDescription().equals(item.get().getDescription())) {
+                    item.get().setDescription(updateItem.getDescription());
+                }
+                if (updateItem.getImagePath() != null && !updateItem.getImagePath().equals(item.get().getImagePath())) {
+                    item.get().setImagePath(updateItem.getImagePath());
+                }
+
+            } else {
+                return "Item not found";
+            }
+            this.inventory.updateItem(item.get());
+            return "OK";
+        } catch (final IOException e) {
+            e.printStackTrace();
+            return "ERROR " + e.getMessage();
+        }
+
+    }
+
     String getItem(Request request, Response response) {
         final Optional<Item> item = this.inventory.getItem(UUID.fromString(request.params(":id")));
         if (item.isPresent()) {

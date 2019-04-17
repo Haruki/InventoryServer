@@ -85,8 +85,18 @@ public class Inventory {
 
     // ----------------------------Item Methods-----------------------------
 
-    public boolean updateImages(UUID id, List<String> imageList) {
-        return false;
+    public boolean updateItem(Item item) {
+        if (!this.existsItem(item.getId())) {
+            return false;
+        }
+        this.items = this.items.stream().map(i -> {
+            if (i.getId().equals(item.getId())) {
+                return item;
+            } else {
+                return i;
+            }
+        }).collect(Collectors.toCollection(ArrayList<Item>::new));
+        return true;
     }
 
     public boolean existsItem(UUID id) {
