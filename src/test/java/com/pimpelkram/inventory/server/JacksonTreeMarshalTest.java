@@ -25,9 +25,11 @@ public class JacksonTreeMarshalTest {
         final List<String> tags = new ArrayList<>();
         tags.add("watercooling");
         tags.add("pc parts");
-        final List<String> imagePaths = new ArrayList
-        final UUID radiatorID = this.inv.addItem("Nexxos 240mm", tags, "000001.jpg", msLagerraum1Box1ID, "Alphacool Radiator");
-        final UUID mouseId = this.inv.addItem("Roccat Tyon", null, "000002.jpg", msLagerraum1Box1ID, "Maus");
+        final List<String> imagePaths = new ArrayList<>();
+        imagePaths.add("000001.jpg");
+        imagePaths.add("000002.jpg");
+        final UUID radiatorID = this.inv.addItem("Nexxos 240mm", tags, imagePaths, msLagerraum1Box1ID, "Alphacool Radiator");
+        final UUID mouseId = this.inv.addItem("Roccat Tyon", null, imagePaths, msLagerraum1Box1ID, "Maus");
 
     }
 
